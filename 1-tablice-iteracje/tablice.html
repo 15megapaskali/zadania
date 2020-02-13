@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="prism.css">
+        <script src="prism.js"></script>
+</head>
+<style>
+    body {
+        padding:30px;
+        font-size:1.3rem;
+        font-family:sans-serif;
+        max-width:1200px;
+        margin:0 auto;
+    }
+    h1 {
+        font-size:3rem;
+    }
+    h2,
+    h3 {
+        margin-top:50px;
+        font-size:2.2rem;
+    }
+    h2:first-of-type,
+    h3:first-of-type {
+        margin-top:0;
+    }
+    hr {
+        margin:3rem 0;
+    }
+</style>
+<body>
+<h2>forEach</h2>
+<p>
+forEach wykonuje automatyczną iterację po danej tablicy, każdorazowo pobierając
+kolejny element tablicy:
+</p>
+<pre><code class="language-js">
+const tab = [1,2,3,4];
+
+tab.forEach(function(el) {
+    //el to kolejne elementy tablicy np 1,2,3
+    console.log(el);
+})
+
+
+tab.forEach(function(el, i) { //drugim opcjonalnym parametrem będzie licznik pętli
+    //i = 0, 1, 2
+    //el to kolejne elementy tablicy np 1,2,3
+    console.log(el, i);
+})
+
+
+tab.forEach(function(el, i) {
+    console.log(el, i);
+}, this); //po funkcji możemy podać na co ma wskazywać this
+</code></pre>
+
+<h2>map</h2>
+<p>
+Map robi podobną jak powyższa pętlę, ale każdorazowo funkcja zwraca element tablicy,
+w wyniku czego map zwraca NOWĄ tablicę z taką sama liczbą elementów:
+</p>
+<pre><code class="language-js">
+const tab = [1,2,3,4];
+const tab2 = tab.map(function(el) {
+    return el * 2;
+});
+console.log(tab2); // [2,4,6,8]
+
+
+const tab3 = tab.map(function(el, i) {
+    return el * i;
+})
+console.log(tab3); // [0, 2, 6, 12]
+
+
+const tab4 = ["marcin", "ania", "monika"];
+const tab5 = tab4.map(function(user) {
+    return user.toUpperCase()
+});
+console.log(tab5); // ["MARCIN", "ANIA", "MONIKA"]
+</code></pre>
+
+<h2>filter</h2>
+<p>
+Filter odfiltrowuje elementy tablicy i zwraca te, które spełniają założenie:
+</p>
+
+<pre><code class="language-js">
+const tab = [2,1,3,4];
+const tab2 = tab.filter(function(nr) {
+    return nr % 2 === 0
+});
+console.log(tab2); // [2,4]
+
+
+const tab3 = [
+    {name : "Marcin", age: "13"},
+    {name : "Patryk", age: "18"},
+    {name : "Ania", age: "20"},
+];
+
+console.log(tab3.filter(function(user) {
+    return user.age >= 18;
+})); //false
+</code></pre>
+
+<h2>every</h2>
+<p>
+Every sprawdza czy dany warunek jest spełniony dla KAŻDEGO elementu w tablicy.
+Jeżeli funkcja zwróci true, wtedy warunek dla danego elementu jest spełniony.
+Wynik całej pętli będzie true, jeżeli każdy element zwróci true.
+Najlatwiej do tego podejść jak do &amp;&amp; w instrukcjach if.
+</p>
+
+<pre><code class="language-js">
+const tab2 = [1,2,3,4];
+
+console.log('Wszystkie liczby są większe od 2:')
+const evenAll = tab2.every(function(nr) {
+    return nr > 2
+});
+console.log(evenAll); //false
+
+
+const tab3 = [
+    {name : "Marcin", age: "13"},
+    {name : "Patryk", age: "18"},
+    {name : "Ania", age: "20"},
+];
+
+console.log(tab3.every(function(el) {
+    return el.age > 18
+})) //false
+</code></pre>
+
+<h2>some</h2>
+<p>
+Some sprawdza czy dany warunek jest spełniony dla DOWOLNEGO elementu w tablicy.
+Jeżeli funkcja zwróci true, wtedy warunek dla danego elementu jest spełniony.
+Wynik całej pętli będzie true, jeżeli DOWOLNY element zwróci true.
+Najłatwiej do tego podejść jak do || w instrukcjach if.
+</p>
+<pre><code class="language-js">
+const tab2 = [1,2,3,4];
+console.log('Dowolna liczba jest większa od 2:')
+console.log(tab2.some(nr => nr>2)); //true
+
+const tab3 = [
+    {name : "Marcin", age: "13"},
+    {name : "Patryk", age: "18"},
+    {name : "Ania", age: "20"},
+]
+
+console.log(tab3.some(function(el) {
+    return el.age>18;
+})) //true
+</code></pre>
+
+<h2>reduce</h2>
+<p>
+Reduce hmm redukuje tablice.
+Przyjmuje 2 główne atrybuty - total i current.
+Pod total podstawiany jest wynik poprzedniej iteracji,
+a dla current kolejny element tablicy.
+Dodatkowo możemy do niej przekazać 2 dodatkowe atrybuty:
+licznik i tablicę po której iterujemy:
+</p>
+
+<pre><code class="language-js">
+const tab = [1,2,3,4];
+const result = tab.reduce((a, b) => a + b);
+//1 iteracja => a==1, b==2
+//2 iteracja => a==3, b==3
+//3 iteracja => a==6, b==4
+//wynik == 10
+
+
+//atrybut po funkcji to początkowa wartość wyniku
+const sum1 = [1, 2, 3].reduce(function(total, num) {
+    return total + num
+}, 0);
+console.log(sum1); // 6
+
+
+//atrybut po funkcji to początkowa wartość wyniku
+const sum2 = [1, 2, 3].reduce(function(total, num) {
+    return total + num;
+}, "");
+console.log(sum2); // "123"
+
+
+
+const sum3 = [1, 2, 3].reduce(function(total, num) {
+    return total + num + '.';
+}, '.');
+console.log(sum3); // ".1.2.3."
+
+
+const data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+const flat = data.reduce(function(total, amount) {
+    return total.concat(amount);
+}, []);
+
+console.log(flat); // [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+
+
+const data2 = [1,2,3,4];
+console.log(  data2.reduce(function(a, b, i) {
+    console.log(a, b, i);
+    return (a + b) * i;
+})  );
+//(1 + 2) * 1  == 3,
+//(3 + 3) * 2  == 12,
+//(12 + 4) * 3 == 48
+</code></pre>
+
+<h2>includes</h2>
+<p>
+    Zwraca true/false w zależności czy dana tablica posiada szukaną wartość.
+    Alternatywą tutaj jest użycie metody znanej ze stringów czyli <strong>indexOf(szukane) !== -1</strong>
+</p>
+
+<pre><code class="language-js">
+const tab = ["Ania", "Marcin", "Patryk", "Sonia"];
+tab.includes("Patryk"); //true
+tab.indexOf("Patryk") !== -1;  //true
+</code></pre>
+
+<h2>find</h2>
+<p>
+    Zwraca pierwszy element, który pasuje do wyniku funkcji:
+</p>
+
+<pre><code class="language-js">
+const tab = [1, 2, 3, 4, 5, 66, 77];
+tab.find(function(nr) {
+    return nr > 5
+}); //66
+
+
+const tab2 = [1, 3, 5, 7, 8];
+tab2.find(function(nr)
+    return nr % 2 === 0;
+}); //8
+
+
+const tab3 = [
+    {
+        name : "Marcin",
+        gender : "man"
+    },
+    {
+        name : "Agata",
+        gender : "woman"
+    },
+    {
+        name : "Piotr",
+        gender : "man"
+    }
+];
+
+const firstWoman = tab3.find(function(user) {
+    return user.gender === "woman";
+});
+</code></pre>
+
+<h2>findIndex</h2>
+<p>
+    Zwraca index pierwszego elementu, który pasuje do wyniku funkcji. Przydaje się to np. do usuwania danego elementu z tablicy:
+</p>
+<pre><code class="language-js">
+const tab = [1,2,3,4,5,6,7];
+tab.findIndex(nr => nr > 5); //5
+
+
+const tab2 = [
+    {
+        name : "Marcin",
+        gender : "man"
+    },
+    {
+        name : "Agata",
+        gender : "woman"
+    },
+    {
+        name : "Piotr",
+        gender : "man"
+    }
+];
+
+const index = tab2.findIndex(function(user) {
+    return gender === "woman");
+});
+
+tab2.splice(index, 1); //usuwam element
+</code></pre>
+</body>
+</html>
